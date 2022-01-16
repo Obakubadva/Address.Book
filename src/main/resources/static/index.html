@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>My Address Book</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/cff3b1482a.js" crossorigin="anonymous"></script>
+    <script  src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous"/>
+
+
+    <script>
+
+    function getAllContacts(){
+    var rout = "http://localhost:8080/contacts";
+    var httprequest = new XMLHttpRequest();
+    httprequest.onreadystatechange = function () {
+      console.log("Hello world!");
+      if (httprequest == 4) {
+        document.getElementById("all_contacts").innerHTML=httprequest.responseText;
+      }
+    }
+    httprequest.open("GET", rout, true);
+    httprequest.send();
+  }
+
+  function searchContacts(){
+    var name = document.getElementById("nm-search").value;
+    var rout = "http://localhost:8080/contacts/" + name;
+    var httpreques = new XMLHttpRequest();
+    httpreques.onreadystatechange = function(){
+      console.log("Hello world!");
+      if (httpreques == 4) {
+      var obj = JSON.parse(httpreques.responseText);
+      var text = obj;
+      document.getElementById("searchMessage").innerHTML = text;
+    }
+      }
+      httpreques.open("GET", rout, true);
+      httpreques.send();
+  }
+
+  function addContact(){
+    var rout = "http://localhost:8080/contacts";
+  var data = {};
+  data.picture = document.getElementById("photo_add").value;
+  data.name = document.getElementById("name_add").value;
+  data.address = document.getElementById("address_add").value;
+  var json = JSON.stringify(data);
+  var httpreques = new XMLHttpRequest();
+  httpreques.onreadystatechange = function () {
+    console.log("Hello world!");
+    if (httpreques == 4 && name!=null) {
+      document.getElementById("addContacts").innerHTML=httpreques.responseText;
+    }
+  }
+  httpreques.open("POST", rout, true);
+  httpreques.setRequestHeader("Content-type", "application/json");
+  httpreques.send(json);
+}
+
+  function deleteContact(){
+    var name = document.getElementById("nm-delete").value;
+    var rout = "http://localhost:8080/contacts/" + name;
+    var httpreques = new XMLHttpRequest();
+    httpreques.onreadystatechange = function () {
+      console.log("Hello world!");
+      if (httpreques == 4 && name!=null) {
+        document.getElementById("deleteMessage").innerHTML=httpreques.responseText;
+      }
+    }
+    httpreques.open("DELETE", rout, true);
+    httpreques.send();
+  }
+
+  function editContacts(){
+    var oldNM = document.getElementById("oldName");
+    var rout = "http://localhost:8080/contacts/" + oldNM;
+    var data = {};
+    data.picture = document.getElementById("newPic").value;
+    data.name = document.getElementById("newName").value;
+    data.address = document.getElementById("newAddress").value;
+    var json = JSON.stringify(data);
+    var httpreques = new XMLHttpRequest();
+    httpreques.onreadystatechange = function () {
+      console.log("Hello world!");
+      if (httpreques == 4) {
+        document.getElementById("editMessage").innerHTML=httpreques.responseText;
+      }
+    }
+    httpreques.open("PATCH", rout, true);
+    httpreques.setRequestHeader("Content-type", "application/json");
+    httpreques.send(json);
+  }
+ </script>
+
+</head>
+
+<body>
+
+<div class="gap-3 container mt-3 pt-5">
+
+    <!-- All Contact Button -->
+
+    <div class="container mb-3 pt-5">
+        <button type="button" id="addButton" onclick="getAllContacts()" class="btn btn-outline-dark"><i class="far fa-address-book"></i> All contacts</button>
+    </div>
+
+
+    <!-- Add Contact Part -->
+
+    <div class="container mb-3">
+        <div class="row">
+            <div class="col">
+                <input type="text" class="form-control" id="photo_add" placeholder="Upload photo" name="phto" required>
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" id="name_add" placeholder="Enter name" name="nm" required>
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" id="address_add" placeholder="Enter address" name="address" required>
+            </div>
+            <div class="col">
+                <button type="submit" onclick="addContact()" class="btn btn-outline-dark"><i class="fas fa-user-plus"></i> Add contact</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Delete Contact -->
+
+    <div class="container mb-3">
+        <div class="row">
+            <div class="col">
+                <input type="name" class="form-control" id="nm-delete" placeholder="Enter name" name="nm" required>
+            </div>
+            <div class="col">
+                <button type="submit" onclick="deleteContact()" class="btn btn-outline-dark"><i class="fas fa-user-minus"></i> Delete a contact</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Contact -->
+
+    <div class="container mb-3">
+        <div class="row">
+            <div class="col">
+                <input type="text" class="form-control" id="nm-search" placeholder="Search for..." name="nm" required>
+            </div>
+            <div class="col">
+                <button type="submit" onclick="searchContacts()" class="btn btn-outline-dark"><i class="fas fa-search"></i> Search contact</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Edit Contact -->
+
+    <div class="container mt-3 bg-dark text-white p-3">
+        <input type="name" class="form-control  mt-3" id="oldName" placeholder="Enter name" name="nm" required>
+        <input type="name" class="form-control  mt-3" id="newName" placeholder="Enter  new name" name="nm" required>
+        <input type="name" class="form-control  mt-3" id="newAddress" placeholder="Enter address" name="nm" required>
+        <div class="row">
+            <div class="col">
+                <input type="name" class="form-control  mt-3" id="newPic" placeholder="Enter new picture" name="nm" required>
+            </div>
+            <div class="col">
+                <button type="submit" onclick="editContacts()" class="btn btn-secondary btn-outline-dark  mt-3"><i class="fas fa-user-edit"></i> Edit contact</button>
+            </div>
+        </div>
+    </div>
+    <p id="all_contacts"></p>
+    <p id="addContacts"></p>
+    <p id="editMessage"></p>
+    <p id="deleteMessage"></p>
+
+    <p id="searchMessage"></p>
+    <a href="http://localhost:8080/download/contact.csv">Download an address book</a>
+</div>
+
+</body>
+
+</html>
