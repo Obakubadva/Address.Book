@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 public class ContactCONTROLLER {
 
@@ -25,7 +25,7 @@ public class ContactCONTROLLER {
     public List<ContactAddRequestModel> getAllContacts() {
         return contacts;
     }
-
+    @CrossOrigin(origins = "http://localhost:8080")
     @CrossOrigin()
     @PostMapping("/contacts")
     public void addContact(@RequestBody ContactAddRequestModel contact) {
@@ -37,14 +37,14 @@ public class ContactCONTROLLER {
         cd.addContact(contact);
     }
 
-    @CrossOrigin()
+    @CrossOrigin(origins = "http://localhost:8080")
     @DeleteMapping("/contacts/{contactName}")
     public void deleteContact(@PathVariable("contactName") String name) {
 
         cd.deleteContact(name);
     }
 
-    @CrossOrigin()
+    @CrossOrigin(origins = "http://localhost:8080")
     @PatchMapping("/contacts/{name}")
     public void updateContact(@RequestBody ContactAddRequestModel contactInfo,
                               @PathVariable("name") String name) {
@@ -56,13 +56,13 @@ public class ContactCONTROLLER {
         cd.updateContact(contactInfo, name);
     }
 
-    @CrossOrigin()
+    @CrossOrigin(origins = "http://localhost:8080")
     @GetMapping("/contacts/{name}")
 
     public ContactAddRequestModel getContact(@PathVariable("name") String contactName) {
         return cd.getContact(contactName);
     }
-    @CrossOrigin()
+    @CrossOrigin(origins = "http://localhost:8080")
     @GetMapping("/contacts/search")
 
     public List<ContactAddRequestModel> searchContactsByName(@RequestParam String contactName) {
